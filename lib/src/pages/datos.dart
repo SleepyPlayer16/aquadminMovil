@@ -96,41 +96,50 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     setState(() {
       _selectedIndex = index;
     });
+    if (index == 2) {
+      Navigator.pushNamed(context, '/login');
+    }
     if (index == 1) {
       Navigator.pushNamed(context, '/datos');
     }
     if (index == 0) {
-      Navigator.pushNamed(context, '/login');
+      Navigator.pushNamed(context, '/home');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final _mediaSize = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Color.fromRGBO(229, 230, 231, 1),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-            backgroundColor: Colors.red,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_outlined),
-            label: 'Datos',
-            backgroundColor: Colors.green,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.logout_outlined),
-            label: 'Logout',
-            backgroundColor: Colors.purple,
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.red,
-        onTap: _onItemTapped,
-        selectedLabelStyle: TextStyle(fontFamily: 'yahei'),
-        unselectedLabelStyle: TextStyle(fontFamily: 'yahei'),
+      bottomNavigationBar: SizedBox(
+        height: 0.1 * _mediaSize,
+        child: BottomNavigationBar(
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined, size: 0.05 * _mediaSize),
+              label: 'Home',
+              backgroundColor: Colors.red,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.bar_chart_outlined, size: 0.05 * _mediaSize),
+              label: 'Datos',
+              backgroundColor: Colors.green,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.logout_outlined, size: 0.05 * _mediaSize),
+              label: 'Logout',
+              backgroundColor: Colors.purple,
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.red,
+          onTap: _onItemTapped,
+          selectedLabelStyle:
+              TextStyle(fontSize: 0.02 * _mediaSize, fontFamily: 'yahei'),
+          unselectedLabelStyle:
+              TextStyle(fontSize: 0.02 * _mediaSize, fontFamily: 'yahei'),
+        ),
       ),
     );
   }
