@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(HomePage());
+void main() => runApp(Login());
 
-class HomePage extends StatelessWidget {
+class Login extends StatelessWidget {
   double padd = 200;
 
   @override

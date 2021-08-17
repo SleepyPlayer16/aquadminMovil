@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:aquadmin_movil/src/pages/home_page.dart';
+import 'package:aquadmin_movil/src/pages/login.dart';
 import 'package:aquadmin_movil/src/pages/registro.dart';
 import 'package:aquadmin_movil/src/pages/datos.dart';
 import 'package:aquadmin_movil/src/pages/home.dart';
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/home',
       routes: {
         '/home': (_) => Home(),
-        '/login': (_) => HomePage(),
+        '/login': (_) => Login(),
         '/datos': (_) => Datos(),
         '/registro': (_) => Registro()
       },

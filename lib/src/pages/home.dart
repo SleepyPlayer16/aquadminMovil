@@ -27,7 +27,6 @@ class Home extends StatelessWidget {
                   0, 0.12 * _mediaSize, 0, 0.79 * _mediaSize),
               child: Text('Bienvenido/a de nuevo.',
                   style: TextStyle(
-                      //REEMPLAZAR EL SAMPLE TEXT POR LA FUNCIÓN QUE OBTENDRÁ EL NOMBRE DEL USUARIO
                       fontFamily: 'yahei',
                       color: Colors.black,
                       fontSize: 3 * _unitHeightValue)),
@@ -168,7 +167,7 @@ class CoolRectangle extends StatelessWidget {
                       child: Text(
                           "Su mascota necesita más agua.", //REEMPLAZAR CON CODIGO DE NOTIFICACIONES
                           style: TextStyle(
-                              fontSize: 0.02 * _mediaSize,
+                              fontSize: 0.018 * _mediaSize,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'yahei')),
                     )),
