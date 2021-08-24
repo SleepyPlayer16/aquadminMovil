@@ -1,10 +1,17 @@
+import 'dart:html';
+
+import 'package:aquadmin_movil/src/models/models.dart';
+import 'package:aquadmin_movil/src/provider/user_provider.dart';
+import 'package:aquadmin_movil/src/models/user_model.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void main() => runApp(Login());
 
 class Login extends StatelessWidget {
   double padd = 200;
-
+  final _loginProvider = Get.find<LoginProvider>();
   @override
   Widget build(BuildContext context) {
     final double _mediaSize = MediaQuery.of(context).size.height;
@@ -65,39 +72,60 @@ class logintext extends StatelessWidget {
   }
 }
 
-class loginbutton extends StatelessWidget {
+class RIKeys {
+  static final riKey1 = GlobalKey<FormState>();
+
+  static final riKey2 = const Key('__RIKEY2__');
+
+  static final riKey3 = const Key('__RIKEY3__');
+}
+
+class loginbutton extends StatefulWidget {
+  @override
+  _loginbuttonState createState() => _loginbuttonState();
+}
+
+class _loginbuttonState extends State<loginbutton> {
+  final _loginProvider = Get.find<LoginProvider>();
+
   @override
   Widget build(BuildContext context) {
     final _mediaSize = MediaQuery.of(context).size.height;
     return Align(
-        alignment: Alignment.center,
-        child: TextButton(
-          onPressed: () => null,
-          child: Text(
-            "Iniciar Sesión",
-            style: TextStyle(color: Colors.black),
-          ),
-          style: ButtonStyle(
-              padding:
-                  MaterialStateProperty.all<EdgeInsets>(EdgeInsets.symmetric(
-                horizontal: _mediaSize * 0.12,
-                vertical: _mediaSize * 0.04,
-              )),
-              foregroundColor: MaterialStateProperty.all<Color>(
-                  Color.fromRGBO(102, 208, 243, 1)),
-              backgroundColor: MaterialStateProperty.all<Color>(
-                  Color.fromRGBO(102, 208, 243, 1)),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50.0),
-                      side: BorderSide(color: Colors.black, width: 2.0)))),
-        ));
+      alignment: Alignment.center,
+      child: TextButton(
+        onPressed: () async {
+          key:
+          RIKeys.riKey1;
+          if (!_loginProvider.checkValidator()) return;
+          final respuesta = await _loginProvider.login();
+        },
+        child: Text(
+          "Iniciar Sesión",
+          style: TextStyle(color: Colors.black),
+        ),
+        style: ButtonStyle(
+            padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.symmetric(
+              horizontal: _mediaSize * 0.12,
+              vertical: _mediaSize * 0.04,
+            )),
+            foregroundColor: MaterialStateProperty.all<Color>(
+                Color.fromRGBO(102, 208, 243, 1)),
+            backgroundColor: MaterialStateProperty.all<Color>(
+                Color.fromRGBO(102, 208, 243, 1)),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                    side: BorderSide(color: Colors.black, width: 2.0)))),
+      ),
+    );
   }
 }
 
 class MyCustomForm extends StatefulWidget {
   final String txt;
   final double pad;
+
   MyCustomForm({Key? key, required this.txt, required this.pad})
       : super(key: key);
   @override
@@ -107,6 +135,12 @@ class MyCustomForm extends StatefulWidget {
 }
 
 class MyCustomFormState extends State<MyCustomForm> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  final _loginProvider = Get.find<LoginProvider>();
   @override
   Widget build(
     BuildContext context,
@@ -119,6 +153,17 @@ class MyCustomFormState extends State<MyCustomForm> {
         Container(
           width: _mediaSize * 0.35,
           child: TextFormField(
+            onChanged: (data) {
+              _loginProvider.usuario.correo = data;
+            },
+            validator: (data) {
+              if (data != '')
+                return null;
+              else
+                return 'Campo obligatorio';
+            },
+            keyboardType: TextInputType.emailAddress,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
                 suffixIcon:
                     Icon(Icons.email, color: Color.fromRGBO(102, 208, 243, 1)),
@@ -137,7 +182,17 @@ class MyCustomFormState extends State<MyCustomForm> {
           child: Container(
             width: _mediaSize * 0.35,
             child: TextFormField(
-              obscureText: true,
+              onChanged: (data) {
+                _loginProvider.usuario.password = data;
+              },
+              validator: (data) {
+                if (data!.length > 3)
+                  return null;
+                else
+                  return 'Contraseña no valida';
+              },
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              obscureText: true, //PARA QUE EL PASSWORD APAREZCA COMO PUNTOS
               decoration: InputDecoration(
                   suffixIcon:
                       Icon(Icons.lock, color: Color.fromRGBO(102, 208, 243, 1)),

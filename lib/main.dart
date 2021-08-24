@@ -3,6 +3,7 @@ import 'package:aquadmin_movil/src/pages/login.dart';
 import 'package:aquadmin_movil/src/pages/registro.dart';
 import 'package:aquadmin_movil/src/pages/datos.dart';
 import 'package:aquadmin_movil/src/pages/home.dart';
+import 'package:aquadmin_movil/src/pages/check_storage.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,7 +21,8 @@ class MyApp extends StatelessWidget {
         '/home': (_) => Home(),
         '/login': (_) => Login(),
         '/datos': (_) => Datos(),
-        '/registro': (_) => Registro()
+        '/registro': (_) => Registro(),
+        '/check': (_) => CheckStorage()
       },
     );
   }

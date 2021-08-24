@@ -3,8 +3,16 @@ import 'package:pie_chart/pie_chart.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
+import 'package:aquadmin_movil/src/models/data_model.dart';
+import 'package:aquadmin_movil/src/provider/data_states.dart';
+import 'package:get/get.dart';
+import 'dart:async';
 
 void main() => runApp(const Home());
+String aviso = "";
+double? temp = 0;
+double? dist = 0;
+var _dato;
 
 /// This is the main application widget.
 class Home extends StatelessWidget {
@@ -47,7 +55,7 @@ class Home extends StatelessWidget {
           ),
           CoolRectangle(),
           Elements(),
-          TextDataElements()
+          _datos()
         ],
       ),
     );
@@ -101,6 +109,65 @@ class Elements extends StatelessWidget {
   }
 }
 
+class _datos extends StatefulWidget {
+  @override
+  __datosState createState() => __datosState();
+}
+
+class __datosState extends State<_datos> {
+  @override
+  void initState() {
+    final _dataState = Get.put(datoState());
+    _dataState.obtenerDatos();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double _unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    double multiplier = 5.0;
+    final _mediaSize = MediaQuery.of(context).size.height;
+    return Stack(
+      children: [
+        GetBuilder<datoState>(builder: (datoState datoState) {
+          if (datoState.dato.length > 0) {
+            _dato = datoState.dato.last;
+            temp = _dato.temperatura;
+            dist = _dato.restante;
+          }
+
+          return Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(0, 0.7 * _mediaSize, 0, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment
+                    .center, //Center Row contents horizontally,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Spacer(flex: 1),
+                  Text(dist.toString() + "%",
+                      style: TextStyle(
+                          fontSize: 0.06 * _mediaSize,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'yahei')),
+                  Spacer(flex: 1),
+                  Text(temp.toString() + "°C",
+                      style: TextStyle(
+                          fontSize: 0.06 * _mediaSize,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'yahei')),
+                  Spacer(flex: 1),
+                ],
+              ),
+            ),
+          );
+        })
+      ],
+    );
+  }
+}
+
 class TextDataElements extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -117,13 +184,13 @@ class TextDataElements extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Spacer(flex: 1),
-                Text("50" + "%",
+                Text("12" + "%",
                     style: TextStyle(
                         fontSize: 0.06 * _mediaSize,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'yahei')),
                 Spacer(flex: 1),
-                Text("30" + "°C",
+                Text("33" + "°C",
                     style: TextStyle(
                         fontSize: 0.06 * _mediaSize,
                         fontWeight: FontWeight.bold,
@@ -138,7 +205,35 @@ class TextDataElements extends StatelessWidget {
   }
 }
 
-class CoolRectangle extends StatelessWidget {
+class CoolRectangle extends StatefulWidget {
+  @override
+  _CoolRectangleState createState() => _CoolRectangleState();
+}
+
+class _CoolRectangleState extends State<CoolRectangle> {
+  late Timer timer;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Timer.periodic(Duration(seconds: 2), (_) {
+      setState(() => CoolRectangle());
+      if (dist! <= 20) {
+        aviso = "Su mascota necesita más agua.";
+      } else if (dist! <= 50) {
+        aviso = "Su mascota tiene la mitad de agua.";
+      } else {
+        aviso = "Su mascota tiene suficiente agua!";
+      }
+      // your logic her
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+  }
+
   @override
   Widget build(BuildContext context) {
     final _mediaSize = MediaQuery.of(context).size.height;
@@ -165,7 +260,7 @@ class CoolRectangle extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(0.1 * _mediaSize, 0, 0, 0),
                       child: Text(
-                          "Su mascota necesita más agua.", //REEMPLAZAR CON CODIGO DE NOTIFICACIONES
+                          aviso, //REEMPLAZAR CON CODIGO DE NOTIFICACIONES
                           style: TextStyle(
                               fontSize: 0.018 * _mediaSize,
                               fontWeight: FontWeight.bold,
@@ -201,7 +296,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       Navigator.pushNamed(context, '/login');
     }
     if (index == 1) {
-      Navigator.pushNamed(context, '/datos');
+      Navigator.pushNamed(context, '/datos', arguments: _dato);
     }
     if (index == 0) {
       Navigator.pushNamed(context, '/home');

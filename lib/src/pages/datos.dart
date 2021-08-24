@@ -2,8 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:aquadmin_movil/src/models/data_model.dart';
+import 'package:aquadmin_movil/src/provider/data_states.dart';
+import 'package:get/get.dart';
+import 'dart:async';
 
 void main() => runApp(const Datos());
+
+String aviso = "";
+double temp = 0;
+double dist = 0;
+String fecha = "";
+var _dato;
 
 /// This is the main application widget.
 class Datos extends StatelessWidget {
@@ -29,8 +39,68 @@ class Datos extends StatelessWidget {
                       fontFamily: 'yahei', color: Colors.black, fontSize: 35)),
             ),
           ),
+          _datos(),
         ],
       ),
+    );
+  }
+}
+
+class _datos extends StatefulWidget {
+  @override
+  __datosState createState() => __datosState();
+}
+
+class __datosState extends State<_datos> {
+  @override
+  void initState() {
+    final _dataState = Get.put(datoState());
+    _dataState.obtenerDatos();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double _unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    double multiplier = 5.0;
+    final _mediaSize = MediaQuery.of(context).size.height;
+    return Stack(
+      children: [
+        GetBuilder<datoState>(builder: (datoState datoState) {
+          if (datoState.dato.length > 0) {
+            _dato = datoState.dato.last;
+            temp = _dato.temperatura;
+            dist = _dato.restante;
+          }
+
+          return Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(0, 0.7 * _mediaSize, 0, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment
+                    .center, //Center Row contents horizontally,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Spacer(flex: 1),
+                  Text(dist.toString() + "%",
+                      style: TextStyle(
+                          fontSize: 0.06 * _mediaSize,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'yahei')),
+                  Spacer(flex: 1),
+                  Text(temp.toString() + "°C",
+                      style: TextStyle(
+                          fontSize: 0.06 * _mediaSize,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'yahei')),
+                  Spacer(flex: 1),
+                ],
+              ),
+            ),
+          );
+        })
+      ],
     );
   }
 }
@@ -38,12 +108,12 @@ class Datos extends StatelessWidget {
 class CoolChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     Map<String, double> dataMap = {
-      "Sample text 1": 5,
-      "Sample text 2": 3,
-      "Sample text 3": 2,
-      "Sample text 4": 2,
+      "Día 1": 1,
+      "Día 2": 3,
+      "Día 3": 2,
+      "Día 4": 2,
+      "Día 5": 2,
     };
     List<Color> colorList = [
       Colors.red,
@@ -60,7 +130,7 @@ class CoolChart extends StatelessWidget {
       initialAngleInDegree: 0,
       chartType: ChartType.ring,
       ringStrokeWidth: 32,
-      centerText: "HYBRID",
+      centerText: "CANTIDAD DE AGUA",
       legendOptions: LegendOptions(
         showLegendsInRow: false,
         legendPosition: LegendPosition.right,

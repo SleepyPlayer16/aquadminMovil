@@ -33,6 +33,7 @@ dependencies:
   email_validator:
   pie_chart:
   flutter_device_type:
+  flutter_secure_storage: ^4.2.1
 
 dev_dependencies:
   flutter_test:
